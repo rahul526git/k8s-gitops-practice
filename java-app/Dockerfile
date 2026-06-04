@@ -1,5 +1,5 @@
-# Stage 1: Runtime environment
-FROM openjdk:11-jre-slim
+# Use the official, production-ready Eclipse Temurin Java 11 runtime image
+FROM eclipse-temurin:11-jre-alpine
 WORKDIR /app
 
 # Copy the compiled .jar file from the target directory into the container

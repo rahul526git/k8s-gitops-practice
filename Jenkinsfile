@@ -9,22 +9,14 @@ pipeline {
         }
         
         stage('Run Unit Tests') {
+            // This stage will ONLY run if the PR is aiming for the main branch
+            when {
+                changeTarget 'main' 
+            }
             steps {
-                echo 'Running Application Unit Tests...'
-                // Simulate running tests. Change to 'exit 1' to practice a failure!
+                echo "Validated: This PR is targeting the 'main' branch. Running tests..."
                 sh 'exit 0' 
             }
-        }
-    }
-    
-    post {
-        success {
-            echo 'Tests passed! Notifying GitHub...'
-            // This tells GitHub the PR is safe to merge
-        }
-        failure {
-            echo 'Tests failed! Locking GitHub PR...'
-            // This keeps the GitHub PR locked
         }
     }
 }

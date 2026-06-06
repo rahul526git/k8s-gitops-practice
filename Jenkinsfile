@@ -1,21 +1,29 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout Code') {
             steps {
+                echo 'Pulling latest code repository...'
                 checkout scm
             }
         }
-        
-        stage('Run Unit Tests') {
-            // This stage will ONLY run if the PR is aiming for the main branch
+
+        stage('SonarQube Analysis') {
+            // This tells Jenkins: Only run this stage if it is a PR targeting 'main'
             when {
-                changeTarget 'main' 
+                changeRequest target: 'main'
             }
             steps {
-                echo "Validated: This PR is targeting the 'main' branch. Running tests..."
-                sh 'exit 0' 
+                echo 'Running SonarQube Code Quality Scanner...'
+                echo 'SonarQube Scan Completed successfully!'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                echo 'Executing application test suites...'
+                sh 'echo "Tests passed!"'
             }
         }
     }

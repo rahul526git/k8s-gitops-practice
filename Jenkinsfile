@@ -1,30 +1,31 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout Code') {
             steps {
+                echo 'Pulling latest code repository...'
                 checkout scm
             }
         }
-        
-        stage('Run Unit Tests') {
+
+        stage('SonarQube Analysis') {
+            // This tells Jenkins: Only run this stage if it is a PR targeting 'main'
+            when {
+                changeRequest target: 'main'
+            }
             steps {
-                echo 'Running Application Unit Tests...'
-                // Simulate running tests. Change to 'exit 1' to practice a failure!
-                sh 'exit 0' 
+                echo 'Running SonarQube Code Quality Scanner...'
+                echo 'SonarQube Scan Completed successfully!'
             }
         }
-    }
-    
-    post {
-        success {
-            echo 'Tests passed! Notifying GitHub...'
-            // This tells GitHub the PR is safe to merge
-        }
-        failure {
-            echo 'Tests failed! Locking GitHub PR...'
-            // This keeps the GitHub PR locked
+        //ghh
+
+        stage('Run Unit Tests') {
+            steps {
+                echo 'Executing application test suites...'
+                sh 'echo "Tests passed!"'
+            }
         }
     }
 }

@@ -7,27 +7,38 @@ pipeline {
     }
 
     stages {
-        stage('1. Checkout Feature Branch') {
+        stage('Git Checkout') {
             steps {
-                echo 'Dynamically checking out the incoming PR/feature branch...'
-                checkout scm
+                echo 'Checking out official production code from main branch...'
+                git branch: 'citesting', credentialsId: 'jenkins-user', url: 'https://github.com/rahul526git/k8s-gitops-practice'
             }
         }
 
-        stage('2. Run Target Unit Tests') {
+
+        stage('Maven Build & Test') {
             steps {
-                echo 'Executing unit tests using Java 17 runtime environment...'
+                echo 'Compiling Java code and packaging the JAR file...'
                 dir('java-app') {
-                    sh 'mvn clean test'
+                    sh 'mvn clean package'
                 }
             }
         }
+
+        
+        stage('Simulated Delay') {
+            steps {
+                echo 'Simulating a long-running build step...'
+                // Sleep for 300 seconds (5 minutes)
+                sh 'sleep 600'
+            }
+        }
+
 
         stage('3. Verify Dockerfile Compilation') {
             steps {
                 echo 'Testing multi-stage Docker build integrity (No Push)...'
                 dir('java-app') {
-                    sh "docker build -t pr-test-build:${env.BUILD_NUMBER} ."
+                    sh "docker build -t pr-citesting-build:${env.BUILD_NUMBER} ."
                 }
             }
         }

@@ -29,7 +29,7 @@ pipeline {
             steps {
                 echo 'Simulating a long-running build step...'
                 // Sleep for 300 seconds (5 minutes)
-                sh 'sleep 600'
+                sh 'sleep 6'
             }
         }
 
